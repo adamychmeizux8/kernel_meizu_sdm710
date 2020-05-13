@@ -42,6 +42,8 @@
 #include "exposure_adjustment.h"
 #endif
 
+#include <linux/display_state.h>
+
 /**
  * topology is currently defined by a set of following 3 values:
  * 1. num of layer mixers
@@ -63,6 +65,13 @@
 #define DEFAULT_PANEL_PREFILL_LINES	25
 
 #define DISPLAY_SKINCE_MODE 0x400000
+
+bool display_on = true;
+
+bool is_display_on()
+{
+	return display_on;
+}
 
 static struct dsi_panel *g_panel;
 static int panel_disp_param_send_lock(struct dsi_panel *panel, int param);
@@ -529,6 +538,7 @@ error_disable_vregs:
 	(void)dsi_pwr_enable_regulator(&panel->power_info, false);
 
 exit:
+	display_on = true;
 	return rc;
 }
 
@@ -559,7 +569,7 @@ static int dsi_panel_power_off(struct dsi_panel *panel)
 	rc = dsi_pwr_enable_regulator(&panel->power_info, false);
 	if (rc)
 		pr_err("[%s] failed to enable vregs, rc=%d\n", panel->name, rc);
-
+	display_on = false;
 	return rc;
 }
 static int dsi_panel_tx_cmd_set(struct dsi_panel *panel,
