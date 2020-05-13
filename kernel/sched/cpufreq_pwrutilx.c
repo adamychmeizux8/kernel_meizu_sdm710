@@ -21,6 +21,7 @@
 #include <trace/events/power.h>
 #include <linux/display_state.h>
 #include <linux/sched/sysctl.h>
+#include <linux/display_state.h>
 #include "sched.h"
 #include "tune.h"
 
